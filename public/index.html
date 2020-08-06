@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input id="aaa" value="">
+
+
+    <script src="./javascripts/socket.io.min.js"></script>
+    <script>
+    window.onload=function () {
+        var socket=io.connect("ws://127.0.0.1:4000");
+
+        var userInfo={
+            'userid': 111,
+            'username': 'index'
+        };
+        socket.emit('login',userInfo);
+
+        socket.on('login',function (o) {
+            console.log('login', o);
+        });
+        
+        var aaa = document.querySelector('#aaa');
+        socket.on('message',function (obj) {
+            console.log('data:', obj);
+            aaa.value = obj.aaa;
+        })
+
+        
+        aaa.addEventListener('keyup', function(e){
+            let val = this.value;
+            socket.emit('message', {'aaa': val})
+        })
+    }
+    </script>
+</body>
+</html>
